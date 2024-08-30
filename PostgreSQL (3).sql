@@ -71,3 +71,46 @@ SELECT
 SELECT AVG(recebimento_mensal),round(avg(recebimento_mensal)) FROM investimentos
 
 SELECT round(avg(recebimento_mensal),2) FROM investimentos
+
+--GROUP BY --é usado para agrupar linhas que têm os mesmos valores eem colunas específicas
+--permitindo-nos realizar operações de agregação em cadaa grupo.
+--Retornar o número total de investimentos cadastrados, agrupados por grupo de investimento.
+SELECT nome, COUNT(*), SUM(recebimento_mensal) FROM investimentos GROUP by nome 
+
+--Having -- permite filtrar o conjunto de resultados usando dados agregados.demo
+--Retorna o número total de investimentos cadastrados, agrupados por grupos de investimentos. 
+
+SELECT nome, COUNT(*), sum(recebimento_mensal) FROM investimentos GROUP By nome
+HAVING SUM(recebimento_mensal)>=500
+
+
+SELECT nome, COUNT(*), sum(recebimento_mensal) FROM investimentos GROUP By nome
+HAVING SUM(recebimento_mensal)>=500
+AND COUNT(*)<7
+
+CREATE TABLE estoque(
+id_estoque INTEGER PRIMARY KEY NOT NULL,
+nome VARCHAR(250),  
+cnpj VARCHAR(20) UNIQUE not NULL  
+);
+
+CREATE TABLE nota_fiscal(
+id_nota_fiscal INTEGER PRIMARY KEY not NULL,
+qta_itens INTEGER CHECK(qta_itens > 0),
+num_comprador INTEGER,
+data_compra TIMESTAMP,
+valor_total NUMERIC(10,2)
+);
+
+CREATE TABLE produtos(
+id_produto INTEGER PRIMARY KEY,
+id_nota_fiscal INTEGER,
+id_estoque INTEGER,
+nome VARCHAR(100),
+descricao VARCHAR(300),
+avariado CHAR(1),
+valor NUMERIC(7,2) CHECK(valor > 0),
+validade DATE,
+CONSTRAINT fk_id_nota_fiscal FOREIGN key(id_nota_fiscal) REFERENCES nota_fiscal(id_nota_fiscal),
+CONSTRAINT fk_id_estoque FOREIGN KEY(id_estoque) REFERENCES estoque(id_estoque) 
+)
